@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Monitoring</title>
+		<meta charset="utf-8" />
+		<style type="text/css">
+			.state {
+				margin-right:	5px;
+			}
+			.good {
+				background:		green;
+			}
+			.warning {
+				background:		yellow;
+			}
+			.bad {
+				background:		red;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Monitoring</h1>
+			<h2>Last check: {{ lastcheck }}</h2>
+		</header>
+		<article>
+			<ul>
+				%for host in hosts:
+					<li>
+						<h3>{{ host }}</h3>
+						<ul>
+							%for service in hosts[host]:
+								<li>
+									%if service["state"] == True:
+										<span class="state good">
+									%elif service["state"] == 3:
+										<span class="state warning">
+									%else:
+										<span class="state bad">
+									%end
+
+									%if len(service["message"]) > 0:
+										{{ service["message"] }}
+									%else:
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+									%end
+
+									</span>
+									{{ service["service"] }}
+								</li>
+							%end
+						</ul>
+					</li>
+				%end
+			</ul>
+		</article>
+	</body>
+</html>
