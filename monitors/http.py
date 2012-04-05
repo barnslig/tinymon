@@ -21,7 +21,10 @@ class HTTP:
 	def http(self):
 		try:
 			http = urllib2.urlopen(self.url, timeout=3)
-			self.state = True, ""
+			if http.code == 200:
+				self.state = True, ""
+			else:
+				self.state = 3, "HTTP Status: {0}".format(str(http.code))
 		except urllib2.HTTPError, e:
 			self.state = False, "HTTP Error: {0}".format(str(e.code))
 		except:
