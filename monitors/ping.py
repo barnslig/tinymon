@@ -19,13 +19,17 @@ class PING:
 
 		out, error = ping.communicate()
 		if len(error) == 0:
-			out = out.split("\n")
-			out = out[len(out)-3]
-			out = out.split(" ")
+			lines = out.split("\n")
+			res = lines[len(lines)-3]
+			res = res.split(" ")
+
+			rtt = lines[len(lines)-2]
+			rtt = rtt.split("/")
+			rtt = rtt[4]
 
 			if "errors," in out:
-				self.state = False, "Errors: {0}, Packetloss: {1}, Time: {2}".format(out[5], out[7], out[11])
+				self.state = False, "Errors: {0}, Packetloss: {1}, RTT Avg.: {2} ms".format(res[5], res[7], rtt)
 			else:
-				self.state = True, "Time: {0}".format(out[9])
+				self.state = True, "RTT Avg.: {0} ms".format(rtt)
 		else:
 			self.state = False, error.replace("ping: ", "").replace("\n", "")
