@@ -16,6 +16,6 @@ class TCP:
 		try:
 			self.s.connect((self.settings["host"], self.settings["port"]))
 			self.s.shutdown(2)
-			self.state = True, ""
+			self.state = True, "Port: {0}".format(str(self.settings["port"]))
 		except:
 			self.state = False, sys.exc_info()[1]
