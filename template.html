@@ -4,33 +4,144 @@
 		<title>Monitoring</title>
 		<meta charset="utf-8" />
 		<style type="text/css">
-			.state {
-				margin-right:	5px;
+			@import url(http://fonts.googleapis.com/css?family=PT+Sans);
+
+			body {
+				font-family:	PT Sans, sans-serif;
 			}
+
+			.service {
+				padding-left:	5px;
+			}
+			.state {
+				position:		absolute;
+				right:			0;
+				left:			80px;
+				top:			0;
+				bottom:			0;
+				padding-top:	2px;
+				padding-left:	5px;
+			}
+			.counter {
+				padding:		5px;
+				padding-top:	0;
+				padding-bottom:	0;
+			}
+
 			.good {
 				background:		green;
+				color:			white;
 			}
 			.warning {
 				background:		yellow;
 			}
 			.bad {
 				background:		red;
+				color:			white;
+			}
+
+			header {
+				border-bottom:	1px lightgray solid;
+				margin-bottom:	15px;
+			}
+			header h1 {
+				float:			left;
+				margin:			7px;
+				margin-top:		3px;
+				font-weight:	normal;
+			}
+			header h1 small {
+				font-weight:	lighter;
+				font-size:		14px;
+				color:			#aaa;
+				margin-top:		-5px;
+			}
+			header table {
+				float:			right;
+			}
+			.clear {
+				clear:			both;
+			}
+
+			#hosts {
+				list-style:		none;
+				margin:			0;
+				padding:		0;
+			}
+			#hosts li {
+				border:			1px lightgray solid;
+				margin-bottom:	15px;
+			}
+			#hosts li h3 {
+				margin:			0;
+				padding:		5px;
+				background:		#eee;
+				border-bottom:	1px lightgray solid;
+				font-weight:	lighter;
+				font-size:		17px;
+
+			}
+			#hosts li ul {
+				list-style:		none;
+				margin:			0;
+				padding:		5px;
+				padding-bottom:	0;
+			}
+			#hosts li ul li {
+				padding:		2px;
+				position:		relative;
+				margin-bottom:	5px;
+				border-radius:	5px;
 			}
 		</style>
 	</head>
 	<body>
 		<header>
-			<h1>Monitoring</h1>
-			<h2>Last check: {{ lastcheck }}</h2>
+			<h1>
+				Monitoring
+				<small>Last check: {{ lastcheck }}</small>
+			</h1>
+
+			<table>
+				<tr>
+					<th>Good</th>
+					<th>Warning</th>
+					<th>Bad</th>
+				</tr>
+				<tr>
+					%if counters["good"] > 0:
+						<td class="counter good">{{ counters["good"] }}</td>
+					%else:
+						<td class="counter undefined">{{ counters["good"] }}</td>
+					%end
+
+					%if counters["warning"] > 0:
+						<td class="counter warning">{{ counters["warning"] }}</td>
+					%else:
+						<td class="counter undefined">{{ counters["warning"] }}</td>
+					%end
+
+					%if counters["bad"] > 0:
+						<td class="counter bad">{{ counters["bad"] }}</td>
+					%else:
+						<td class="counter undefined">{{ counters["bad"] }}</td>
+					%end
+				</tr>
+			</table>
+
+			<div class="clear"></div>
 		</header>
 		<article>
-			<ul>
+			<ul id="hosts">
 				%for host in hosts:
 					<li>
 						<h3>{{ host }}</h3>
 						<ul>
 							%for service in hosts[host]:
 								<li>
+									<span class="service">
+										{{ service["service"] }}
+									</span>
 									%if service["state"] == True:
 										<span class="state good">
 									%elif service["state"] == 3:
@@ -38,15 +149,8 @@
 									%else:
 										<span class="state bad">
 									%end
-
-									%if len(service["message"]) > 0:
-										{{ service["message"] }}
-									%else:
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									%end
-
+									{{ service["message"] }}
 									</span>
-									{{ service["service"] }}
 								</li>
 							%end
 						</ul>

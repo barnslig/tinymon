@@ -20,7 +20,7 @@ db_monitors = sqlalchemy.Table('monitors', db_metadata,
 	sqlalchemy.Column('host', sqlalchemy.String),
 	sqlalchemy.Column('service', sqlalchemy.String),
 	sqlalchemy.Column('time', sqlalchemy.TIMESTAMP),
-	sqlalchemy.Column('state', sqlalchemy.Boolean),
+	sqlalchemy.Column('state', sqlalchemy.Integer),
 	sqlalchemy.Column('message', sqlalchemy.String)
 )
 
